@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Events Editor | Jawsatak</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .ad-wrap { max-width: 1000px; margin: 0 auto; padding: 24px var(--gut) 60px; }
+    .ad-h1 { font-family: var(--display); font-weight: 400; text-transform: uppercase; font-size: clamp(34px, 6vw, 54px); margin: 8px 0 4px; line-height: 1; }
+    .ad-top { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: baseline; justify-content: space-between; }
+    .ad-note { border: 1.5px solid var(--line-2); background: var(--surface); padding: 14px 16px; margin: 16px 0; font-size: .95rem; }
+    .ad-note h2 { font: 700 12px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--accent); margin: 0 0 8px; }
+    .ad-note ol { margin: 0; padding-left: 20px; }
+    .ad-note li { margin: 4px 0; }
+    .ad-state { padding: 10px 14px; font: 600 13px var(--mono); border: 1.5px solid var(--line-2); margin: 0 0 14px; }
+    .ad-state.dirty { border-color: var(--warn); color: var(--warn); }
+    .ad-state.clean { border-color: var(--accent); color: var(--accent); }
+    .ad-warn { border: 1.5px solid #ff6b6b; color: #ff9d9d; padding: 10px 14px; margin: 0 0 14px; }
+    .ad-bar { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 16px; }
+    table.ad { width: 100%; border-collapse: collapse; }
+    table.ad th { text-align: left; font: 700 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); padding: 8px; border-bottom: 1px solid var(--line-2); }
+    table.ad td { padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    table.ad .t { font-weight: 700; }
+    table.ad .sub { color: var(--muted); font-size: .88rem; }
+    .flag { display: inline-block; font: 700 10px var(--mono); letter-spacing: .08em; text-transform: uppercase; padding: 2px 6px; border: 1px solid var(--line-2); margin: 2px 4px 0 0; }
+    .flag--hidden { border-color: #ff8d8d; color: #ff8d8d; }
+    .flag--feat { border-color: var(--accent); color: var(--accent); }
+    .flag--sample { border-color: var(--warn); color: var(--warn); }
+    .row-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+    .row-actions .btn { min-height: 34px; padding: 0 10px; font-size: 11px; }
+    @media (max-width: 720px) {
+      table.ad thead { display: none; }
+      table.ad, table.ad tbody, table.ad tr, table.ad td { display: block; width: 100%; }
+      table.ad tr { border-bottom: 1px solid var(--line-2); padding: 8px 0; }
+      table.ad td { border: 0; padding: 4px 0; }
+    }
+    dialog { width: min(720px, 94vw); max-height: 92vh; overflow: auto; background: var(--bg-2); color: var(--text); border: 1.5px solid var(--line-2); padding: 0; }
+    dialog::backdrop { background: rgba(0,0,0,.72); }
+    .dlg-h { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: var(--bg-2); z-index: 2; }
+    .dlg-h h2 { font-family: var(--display); font-weight: 400; text-transform: uppercase; font-size: 28px; margin: 0; }
+    .dlg-b { padding: 16px 18px 6px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .dlg-b .full { grid-column: 1 / -1; }
+    @media (max-width: 560px) { .dlg-b { grid-template-columns: 1fr; } }
+    .fld label, .fld .lbl { display: block; font: 700 11px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+    .fld input[type=text], .fld input[type=date], .fld input[type=time], .fld select, .fld textarea {
+      width: 100%; min-height: 42px; padding: 8px 10px; background: var(--bg); color: var(--text);
+      border: 1.5px solid var(--line-2); font: 15px system-ui, sans-serif; border-radius: 0;
+    }
+    .fld textarea { min-height: 90px; resize: vertical; }
+    .fld .help { font-size: .82rem; color: var(--muted); margin: 4px 0 0; }
+    .fld .err { font-size: .85rem; color: #ff9d9d; margin: 4px 0 0; min-height: 1em; }
+    .checks { display: flex; flex-wrap: wrap; gap: 8px 22px; }
+    .checks label { display: flex; align-items: center; gap: 8px; text-transform: none; letter-spacing: 0; font: 15px system-ui, sans-serif; color: var(--text); }
+    .checks input { width: 20px; height: 20px; }
+    .dlg-f { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; padding: 14px 18px; border-top: 1px solid var(--line); position: sticky; bottom: 0; background: var(--bg-2); }
+    details.ad-out { margin-top: 22px; }
+    details.ad-out summary { cursor: pointer; font: 700 12px var(--mono); letter-spacing: .1em; text-transform: uppercase; }
+    details.ad-out textarea { width: 100%; min-height: 220px; margin-top: 10px; background: var(--bg); color: var(--text); border: 1.5px solid var(--line-2); font: 12px var(--mono); padding: 10px; }
+  </style>
+</head>
+<body>
+<div class="hazard" aria-hidden="true"></div>
+<div class="ad-wrap">
+
+  <div class="ad-top">
+    <h1 class="ad-h1">Events Editor</h1>
+    <p><a href="index.html">View the public page</a> &nbsp;|&nbsp; <a href="index.html?preview=draft" target="_blank" rel="noopener">Preview my draft</a></p>
+  </div>
+
+  <div class="ad-note">
+    <h2>How saving works (please read once)</h2>
+    <p style="margin:0 0 8px">This page edits a <strong>draft stored in this browser only</strong>. It cannot change the live website by itself, because a free static site has no server to save to. Publishing takes three steps:</p>
+    <ol>
+      <li>Add, edit, hide or delete events below. Your draft is saved automatically in this browser.</li>
+      <li>Click <strong>Download events.js</strong>.</li>
+      <li>Replace the <code>events.js</code> file in your site (on GitHub: open the file, or use Add file, then Upload files, and commit). The live page updates in about a minute.</li>
+    </ol>
+    <p style="margin:8px 0 0" class="sub">Your draft lives only in this browser on this device. Clearing site data or using a different device or private window will not show it, so download <code>events.js</code> after any real changes. Anyone can open this page, but nobody can publish anything without access to your site files.</p>
+  </div>
+
+  <div id="storageWarn" class="ad-warn" role="alert" hidden>
+    This browser is blocking storage, so your draft will be lost if you refresh. Make your edits and download <code>events.js</code> before leaving the page.
+  </div>
+
+  <p id="stateMsg" class="ad-state" role="status"></p>
+
+  <div class="ad-bar">
+    <button type="button" class="btn btn--primary" id="addBtn">+ Add event</button>
+    <button type="button" class="btn btn--outline" id="dlBtn">Download events.js</button>
+    <button type="button" class="btn btn--outline" id="copyBtn">Copy events.js</button>
+    <label class="btn btn--ghost" for="importFile" style="margin:0">Import a saved events.js</label>
+    <input type="file" id="importFile" accept=".js,.json,text/javascript,application/json" class="sr-only">
+    <button type="button" class="btn btn--ghost" id="resetBtn">Discard draft</button>
+    <span id="barMsg" class="share__msg" role="status" aria-live="polite"></span>
+  </div>
+
+  <table class="ad" aria-label="Events">
+    <thead><tr><th>Event</th><th>When</th><th>Category / status</th><th>Actions</th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table>
+  <p id="emptyMsg" class="empty" hidden>No events yet. Click "Add event" to create one.</p>
+
+  <details class="ad-out">
+    <summary>View the events.js text this editor will download</summary>
+    <label for="outText" class="sr-only">Generated events.js</label>
+    <textarea id="outText" readonly spellcheck="false"></textarea>
+  </details>
+</div>
+
+<dialog id="dlg" aria-labelledby="dlgTitle">
+  <form id="form" novalidate>
+    <div class="dlg-h">
+      <h2 id="dlgTitle">Event</h2>
+      <button type="button" class="btn btn--ghost btn--sm" id="cancelX">Close</button>
+    </div>
+    <div class="dlg-b">
+      <div class="fld full"><label for="f_title">Title *</label><input type="text" id="f_title" autocomplete="off"><p class="err" id="e_title"></p></div>
+
+      <div class="fld"><label for="f_category">Category</label><select id="f_category"></select></div>
+      <div class="fld"><label for="f_brand">Brand (optional)</label><input type="text" id="f_brand" placeholder="QuarkForce, QuarkUniversity, JawsAtak47..."></div>
+
+      <div class="fld"><label for="f_date">Date *</label><input type="date" id="f_date"><p class="err" id="e_date"></p></div>
+      <div class="fld"><label for="f_endDate">End date (multi-day only)</label><input type="date" id="f_endDate"><p class="err" id="e_endDate"></p></div>
+
+      <div class="fld"><label for="f_startTime">Start time</label><input type="time" id="f_startTime"><p class="help">Leave both times blank for an all-day event.</p></div>
+      <div class="fld"><label for="f_endTime">End time</label><input type="time" id="f_endTime"></div>
+
+      <div class="fld"><label for="f_venue">Venue</label><input type="text" id="f_venue"></div>
+      <div class="fld"><label for="f_city">City</label><input type="text" id="f_city" placeholder="Medford, OR"></div>
+      <div class="fld full"><label for="f_address">Address</label><input type="text" id="f_address"></div>
+
+      <div class="fld full"><label for="f_description">Short description</label><textarea id="f_description"></textarea></div>
+
+      <div class="fld"><label for="f_price">Price</label><input type="text" id="f_price" placeholder="Free, $25, $10 advance / $15 door"></div>
+      <div class="fld"><label for="f_status">Status</label><select id="f_status"></select></div>
+
+      <div class="fld"><label for="f_buttonText">Main button text</label><input type="text" id="f_buttonText"><p class="help" id="h_buttonText"></p></div>
+      <div class="fld"><label for="f_buttonUrl">Main button link</label><input type="text" id="f_buttonUrl" placeholder="https://..., mailto:you@example.com, or #contact"><p class="err" id="e_buttonUrl"></p><p class="help">No link = no button is shown.</p></div>
+
+      <div class="fld"><label for="f_secondaryButtonText">Second button text</label><input type="text" id="f_secondaryButtonText"></div>
+      <div class="fld"><label for="f_secondaryButtonUrl">Second button link</label><input type="text" id="f_secondaryButtonUrl"><p class="err" id="e_secondaryButtonUrl"></p></div>
+
+      <div class="fld"><label for="f_image">Poster image path</label><input type="text" id="f_image" placeholder="assets/my-poster.jpg"><p class="help">Upload the image into the assets folder first.</p></div>
+      <div class="fld"><label for="f_recapUrl">Recap link (after the event)</label><input type="text" id="f_recapUrl"><p class="err" id="e_recapUrl"></p></div>
+
+      <div class="fld full">
+        <span class="lbl">Options</span>
+        <div class="checks">
+          <label><input type="checkbox" id="f_featured"> Feature this event at the top</label>
+          <label><input type="checkbox" id="f_show"> Show on the website</label>
+          <label><input type="checkbox" id="f_sample"> This is sample data</label>
+        </div>
+      </div>
+    </div>
+    <div class="dlg-f">
+      <button type="button" class="btn btn--outline" id="cancelBtn">Cancel</button>
+      <button type="submit" class="btn btn--primary">Save event</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="config.js"></script>
+<script src="events.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var KEY = 'jawsatak.events.draft.v1';
+  var CFG = window.SITE_CONFIG || { categories: [], statuses: {} };
+  var $ = function (id) { return document.getElementById(id); };
+  function clone(x) { return JSON.parse(JSON.stringify(x)); }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function slug(s) { return String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60); }
+
+  var FIELD_ORDER = ['id', 'title', 'category', 'brand', 'date', 'endDate', 'startTime', 'endTime', 'venue', 'address', 'city',
+    'description', 'image', 'imageAlt', 'price', 'status', 'buttonText', 'buttonUrl', 'secondaryButtonText', 'secondaryButtonUrl',
+    'recapUrl', 'featured', 'showOnWebsite', 'sample', 'timeZone'];
+
+  var published = clone(Array.isArray(window.EVENTS) ? window.EVENTS : []);
+  var events, storageOK = true, editingIndex = -1;
+
+  /* ---- storage ---- */
+  try { localStorage.setItem(KEY + '.t', '1'); localStorage.removeItem(KEY + '.t'); } catch (e) { storageOK = false; }
+  $('storageWarn').hidden = storageOK;
+
+  function loadDraft() {
+    if (!storageOK) return null;
+    try { var d = JSON.parse(localStorage.getItem(KEY)); if (d && Array.isArray(d.events)) return d.events; } catch (e) { /* ignore */ }
+    return null;
+  }
+  function saveDraft() {
+    if (!storageOK) return;
+    try { localStorage.setItem(KEY, JSON.stringify({ events: events, savedAt: new Date().toISOString() })); }
+    catch (e) { storageOK = false; $('storageWarn').hidden = false; }
+  }
+
+  events = loadDraft() || clone(published);
+
+  /* ---- clean + export ---- */
+  function clean(ev) {
+    var o = {};
+    FIELD_ORDER.forEach(function (k) {
+      var v = ev[k];
+      if (v === undefined || v === null || v === '') return;
+      if ((k === 'featured' || k === 'sample') && v !== true) return;
+      if (k === 'showOnWebsite' && v !== false) return;
+      o[k] = v;
+    });
+    Object.keys(ev).forEach(function (k) {
+      if (FIELD_ORDER.indexOf(k) < 0 && ev[k] !== '' && ev[k] != null) o[k] = ev[k];
+    });
+    return o;
+  }
+  function sorted() {
+    return events.slice().sort(function (a, b) {
+      return (String(a.date) + String(a.startTime || '')).localeCompare(String(b.date) + String(b.startTime || ''));
+    });
+  }
+  function exportText() {
+    return '/* Jawsatak events. Saved by admin.html on ' + new Date().toISOString().slice(0, 10) + '.\n' +
+      '   You can still edit this file by hand: each { ... } block is one event.\n' +
+      '   Field guide: date "YYYY-MM-DD", times "18:30", category/status keys as in config.js.\n' +
+      '   No buttonUrl = no button. "showOnWebsite": false hides an event. "featured": true pins it. */\n\n' +
+      'window.EVENTS = ' + JSON.stringify(sorted().map(clean), null, 2) + ';\n';
+  }
+
+  /* ---- UI helpers ---- */
+  function barMsg(m) { var el = $('barMsg'); el.textContent = m; setTimeout(function () { if (el.textContent === m) el.textContent = ''; }, 3000); }
+  function catLabel(k) { var c = (CFG.categories || []).filter(function (x) { return x.key === k; })[0]; return c ? c.label : (k || ''); }
+  function stLabel(k) { var s = (CFG.statuses || {})[k]; return s ? s.label : (k || 'upcoming'); }
+  function fmtDate(d) {
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(d || '');
+    if (!m) return d || '';
+    return new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(Date.UTC(+m[1], +m[2] - 1, +m[3])));
+  }
+  function todayStr() {
+    var tz = CFG.timeZone || 'America/Los_Angeles', p = {};
+    new Intl.DateTimeFormat('en-US', { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(new Date()).forEach(function (x) { p[x.type] = x.value; });
+    return p.year + '-' + p.month + '-' + p.day;
+  }
+
+  function render() {
+    var list = sorted(), today = todayStr();
+    $('emptyMsg').hidden = list.length > 0;
+    $('rows').innerHTML = list.map(function (ev) {
+      var i = events.indexOf(ev);
+      var end = ev.endDate && ev.endDate !== ev.date ? ' to ' + fmtDate(ev.endDate) : '';
+      var times = ev.startTime ? ev.startTime + (ev.endTime ? ' - ' + ev.endTime : '') : 'All day';
+      var hidden = ev.showOnWebsite === false;
+      var past = (ev.endDate || ev.date) < today || ev.status === 'completed';
+      return '<tr>' +
+        '<td><span class="t">' + esc(ev.title) + '</span><div class="sub">' + esc([ev.venue, ev.city].filter(Boolean).join(', ')) + '</div>' +
+        (hidden ? '<span class="flag flag--hidden">Hidden</span>' : '') +
+        (ev.featured ? '<span class="flag flag--feat">Featured</span>' : '') +
+        (ev.sample ? '<span class="flag flag--sample">Sample</span>' : '') +
+        (past ? '<span class="flag">Past</span>' : '') + '</td>' +
+        '<td>' + esc(fmtDate(ev.date) + end) + '<div class="sub">' + esc(times) + '</div></td>' +
+        '<td>' + esc(catLabel(ev.category)) + '<div class="sub">' + esc(stLabel(ev.status || 'upcoming')) + '</div></td>' +
+        '<td><div class="row-actions">' +
+        '<button type="button" class="btn btn--outline" data-act="edit" data-i="' + i + '">Edit</button>' +
+        '<button type="button" class="btn btn--ghost" data-act="dup" data-i="' + i + '">Duplicate</button>' +
+        '<button type="button" class="btn btn--ghost" data-act="vis" data-i="' + i + '">' + (hidden ? 'Show' : 'Hide') + '</button>' +
+        '<button type="button" class="btn btn--ghost" data-act="del" data-i="' + i + '">Delete</button>' +
+        '</div></td></tr>';
+    }).join('');
+
+    var text = exportText();
+    $('outText').value = text;
+    var dirty = JSON.stringify(sorted().map(clean)) !== JSON.stringify(published.slice().sort(function (a, b) {
+      return (String(a.date) + String(a.startTime || '')).localeCompare(String(b.date) + String(b.startTime || ''));
+    }).map(clean));
+    var el = $('stateMsg');
+    el.className = 'ad-state ' + (dirty ? 'dirty' : 'clean');
+    el.textContent = dirty
+      ? 'Unpublished changes. Download events.js and upload it to your site to make them live.'
+      : 'Matches the events.js this page loaded. No unpublished changes.';
+  }
+
+  function commit() { saveDraft(); render(); }
+
+  /* ---- form ---- */
+  var F = ['title', 'category', 'brand', 'date', 'endDate', 'startTime', 'endTime', 'venue', 'address', 'city', 'description',
+    'price', 'status', 'buttonText', 'buttonUrl', 'secondaryButtonText', 'secondaryButtonUrl', 'image', 'recapUrl'];
+
+  $('f_category').innerHTML = (CFG.categories || []).map(function (c) { return '<option value="' + esc(c.key) + '">' + esc(c.label) + '</option>'; }).join('');
+  $('f_status').innerHTML = Object.keys(CFG.statuses || {}).map(function (k) { return '<option value="' + esc(k) + '">' + esc(CFG.statuses[k].label) + '</option>'; }).join('');
+
+  function updateBtnHelp() {
+    var s = (CFG.statuses || {})[$('f_status').value];
+    $('h_buttonText').textContent = s ? 'Blank = "' + s.buttonText + '" (the default for this status).' : '';
+  }
+  $('f_status').addEventListener('change', updateBtnHelp);
+
+  function normTime(t) { return /^\d{1,2}:\d{2}$/.test(t || '') ? (t.length === 4 ? '0' + t : t) : ''; }
+
+  function openForm(index) {
+    editingIndex = index;
+    var ev = index >= 0 ? events[index] : { category: (CFG.categories[0] || {}).key, status: 'upcoming', showOnWebsite: true };
+    $('dlgTitle').textContent = index >= 0 ? 'Edit event' : 'Add event';
+    F.forEach(function (k) { $('f_' + k).value = k.indexOf('Time') > -1 ? normTime(ev[k]) : (ev[k] || ''); });
+    if (!$('f_category').value) $('f_category').value = (CFG.categories[0] || {}).key;
+    $('f_status').value = ev.status || 'upcoming';
+    $('f_featured').checked = ev.featured === true;
+    $('f_show').checked = ev.showOnWebsite !== false;
+    $('f_sample').checked = ev.sample === true;
+    document.querySelectorAll('.err').forEach(function (e) { e.textContent = ''; });
+    updateBtnHelp();
+    if (typeof $('dlg').showModal === 'function') $('dlg').showModal(); else $('dlg').setAttribute('open', '');
+    $('f_title').focus();
+  }
+  function closeForm() { if (typeof $('dlg').close === 'function') $('dlg').close(); else $('dlg').removeAttribute('open'); }
+
+  function urlOK(u) {
+    u = (u || '').trim();
+    if (!u) return true;
+    if (/^www\./i.test(u)) return true;
+    if (/^(https?:\/\/|mailto:|tel:|#|\/|\.\/|\.\.\/)/i.test(u)) return true;
+    return !/^[a-z][a-z0-9+.\-]*:/i.test(u);
+  }
+
+  $('form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var errs = {}, v = {};
+    F.forEach(function (k) { v[k] = $('f_' + k).value.trim(); });
+    if (!v.title) errs.title = 'Please enter a title.';
+    if (!v.date) errs.date = 'Please choose a date.';
+    if (v.endDate && v.date && v.endDate < v.date) errs.endDate = 'End date cannot be before the start date.';
+    ['buttonUrl', 'secondaryButtonUrl', 'recapUrl'].forEach(function (k) {
+      if (!urlOK(v[k])) errs[k] = 'Use a full link starting with https://, or mailto:, or #contact.';
+    });
+    document.querySelectorAll('.err').forEach(function (el) { el.textContent = ''; });
+    var first = null;
+    Object.keys(errs).forEach(function (k) { $('e_' + k).textContent = errs[k]; if (!first) first = k; });
+    if (first) { $('f_' + first).focus(); return; }
+
+    var ev = editingIndex >= 0 ? events[editingIndex] : {};
+    F.forEach(function (k) { ev[k] = v[k]; });
+    if (!v.endDate || v.endDate === v.date) ev.endDate = '';
+    if (!v.startTime) ev.endTime = '';
+    ev.featured = $('f_featured').checked;
+    ev.showOnWebsite = $('f_show').checked ? true : false;
+    ev.sample = $('f_sample').checked;
+    if (!ev.id) {
+      var base = slug(v.title + '-' + v.date) || 'event', id = base, n = 2;
+      while (events.some(function (x) { return x.id === id; })) id = base + '-' + (n++);
+      ev.id = id;
+    }
+    if (editingIndex < 0) events.push(ev);
+    closeForm();
+    commit();
+    barMsg('Event saved to your draft');
+  });
+
+  $('cancelBtn').addEventListener('click', closeForm);
+  $('cancelX').addEventListener('click', closeForm);
+  $('addBtn').addEventListener('click', function () { openForm(-1); });
+
+  /* ---- row actions ---- */
+  $('rows').addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-act]');
+    if (!b) return;
+    var i = +b.getAttribute('data-i'), ev = events[i], act = b.getAttribute('data-act');
+    if (act === 'edit') { openForm(i); return; }
+    if (act === 'vis') { ev.showOnWebsite = ev.showOnWebsite === false ? true : false; commit(); return; }
+    if (act === 'del') {
+      if (window.confirm('Delete "' + ev.title + '" from your draft? (Hiding is safer if you might need it again.)')) { events.splice(i, 1); commit(); }
+      return;
+    }
+    if (act === 'dup') {
+      var c = clone(ev);
+      c.title = ev.title + ' (copy)';
+      var base = slug(c.title + '-' + c.date) || 'event', id = base, n = 2;
+      while (events.some(function (x) { return x.id === id; })) id = base + '-' + (n++);
+      c.id = id; c.showOnWebsite = false; c.featured = false;
+      events.push(c); commit();
+      barMsg('Duplicated as a hidden event. Edit it, then click Show.');
+    }
+  });
+
+  /* ---- toolbar ---- */
+  $('dlBtn').addEventListener('click', function () {
+    var blob = new Blob([exportText()], { type: 'text/javascript;charset=utf-8' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = 'events.js';
+    document.body.appendChild(a); a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+    barMsg('Downloaded. Now replace events.js in your site.');
+  });
+  $('copyBtn').addEventListener('click', function () {
+    var text = exportText();
+    function fb() { var t = $('outText'); t.parentElement.open = true; t.focus(); t.select(); barMsg('Press Ctrl/Cmd+C to copy'); }
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(function () { barMsg('Copied. Paste it over the contents of events.js'); }, fb);
+    else fb();
+  });
+  $('resetBtn').addEventListener('click', function () {
+    if (!window.confirm('Discard all draft changes and go back to the events.js currently on the site?')) return;
+    try { localStorage.removeItem(KEY); } catch (e) { /* ignore */ }
+    events = clone(published); render(); barMsg('Draft discarded');
+  });
+  $('importFile').addEventListener('change', function () {
+    var f = this.files[0], input = this;
+    if (!f) return;
+    var r = new FileReader();
+    r.onload = function () {
+      try {
+        var t = String(r.result), a = t.indexOf('['), b = t.lastIndexOf(']');
+        var arr = JSON.parse(t.slice(a, b + 1));
+        if (!Array.isArray(arr) || !arr.every(function (x) { return x && typeof x === 'object'; })) throw new Error('shape');
+        if (window.confirm('Replace your current draft with the ' + arr.length + ' events in "' + f.name + '"?')) { events = arr; commit(); barMsg('Imported ' + arr.length + ' events'); }
+      } catch (e) {
+        window.alert('That file could not be read. Import works with an events.js saved by this editor. A hand-edited file with comments or trailing commas cannot be imported, but you can still open it in a text editor.');
+      }
+      input.value = '';
+    };
+    r.readAsText(f);
+  });
+
+  window.__ADMIN__ = { exportText: exportText, events: function () { return events; } };
+  render();
+})();
+</script>
+</body>
+</html>
