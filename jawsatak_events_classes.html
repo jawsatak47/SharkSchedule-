@@ -1,0 +1,1079 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jawsatak | Events &amp; Classes</title>
+  <meta name="description" content="Upcoming live art events, CanvasWars competitions, art classes and workshops, and JawsAtak music shows. Art. Music. Education. Live Experiences.">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#0e0e10">
+
+  <!-- Open Graph / Social Sharing -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Jawsatak | Events &amp; Classes">
+  <meta property="og:description" content="Upcoming live art, CanvasWars competitions, classes, and music. Art. Music. Education. Live Experiences.">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Jawsatak | Events &amp; Classes">
+  <meta name="twitter:description" content="Upcoming live art, CanvasWars competitions, classes, and music.">
+
+  <!-- Favicon SVG -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230e0e10'/%3E%3Ctext x='32' y='49' font-size='46' font-weight='900' text-anchor='middle' fill='%23c6ff3d' font-family='Impact,Arial Black,sans-serif'%3EJ%3C/text%3E%3C/svg%3E">
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root {
+      --bg-dark: #0e0e10;
+      --bg-card: #18181c;
+      --bg-card-hover: #222228;
+      --accent-neon: #c6ff3d;
+      --accent-neon-glow: rgba(198, 255, 61, 0.25);
+      --text-main: #f0f0f5;
+      --text-muted: #a0a0ab;
+      --border-color: #2e2e38;
+      --hazard-yellow: #f39c12;
+      --font-heading: 'Impact', 'Arial Black', sans-serif;
+      --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* Accessibility Skip Link */
+    .skip {
+      position: absolute;
+      top: -100px;
+      left: 10px;
+      background: var(--accent-neon);
+      color: #000;
+      padding: 8px 16px;
+      font-weight: bold;
+      z-index: 9999;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: top 0.2s;
+    }
+    .skip:focus {
+      top: 10px;
+    }
+
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .hero {
+      position: relative;
+      padding: 60px 0 40px;
+      background: linear-gradient(180deg, #16161a 0%, #0e0e10 100%);
+      border-bottom: 2px solid var(--border-color);
+      overflow: hidden;
+    }
+
+    .hazard {
+      height: 12px;
+      width: 100%;
+      background: repeating-linear-gradient(
+        -45deg,
+        var(--accent-neon),
+        var(--accent-neon) 15px,
+        #0e0e10 15px,
+        #0e0e10 30px
+      );
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    .wordmark {
+      font-family: var(--font-heading);
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      line-height: 1;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .wm-name {
+      color: #fff;
+      text-shadow: 0 0 15px var(--accent-neon-glow);
+    }
+
+    .wm-pipe {
+      color: var(--accent-neon);
+    }
+
+    .wm-sub {
+      color: var(--accent-neon);
+      font-size: 0.6em;
+      letter-spacing: 1px;
+    }
+
+    .tagline {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--accent-neon);
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .intro {
+      max-width: 700px;
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      margin-bottom: 25px;
+    }
+
+    /* Share Bar */
+    .share {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .share__url {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      width: 240px;
+      outline: none;
+    }
+
+    .share__msg {
+      font-size: 0.85rem;
+      color: var(--accent-neon);
+      font-weight: bold;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 2px solid transparent;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .btn--primary {
+      background: var(--accent-neon);
+      color: #000;
+    }
+    .btn--primary:hover {
+      background: #b2f520;
+      box-shadow: 0 0 15px var(--accent-neon-glow);
+      transform: translateY(-2px);
+    }
+
+    .btn--outline {
+      background: transparent;
+      border-color: var(--border-color);
+      color: var(--text-main);
+    }
+    .btn--outline:hover {
+      border-color: var(--accent-neon);
+      color: var(--accent-neon);
+    }
+
+    .btn--sm {
+      padding: 6px 12px;
+      font-size: 0.825rem;
+    }
+
+    .schedule {
+      padding: 50px 0;
+    }
+
+    .section-h {
+      font-family: var(--font-heading);
+      font-size: 2.5rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-h::after {
+      content: '';
+      flex: 1;
+      height: 2px;
+      background: var(--border-color);
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .chip {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .chip:hover, .chip.active {
+      background: var(--accent-neon);
+      color: #000;
+      border-color: var(--accent-neon);
+    }
+
+    .viewtoggle {
+      display: flex;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 4px;
+    }
+
+    .vbtn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 6px 16px;
+      border-radius: 6px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+    .vbtn[aria-pressed="true"] {
+      background: var(--accent-neon);
+      color: #000;
+    }
+
+    .event-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 24px;
+    }
+
+    .event-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .event-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(198, 255, 61, 0.4);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+    }
+
+    .event-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--border-color);
+    }
+    .event-card[data-category*="classes"]::before { background: #3498db; }
+    .event-card[data-category*="live-art"]::before { background: #e74c3c; }
+    .event-card[data-category*="canvaswars"]::before { background: #9b59b6; }
+    .event-card[data-category*="speaking"]::before { background: #f1c40f; }
+
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .badge {
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+    }
+    .badge--cat {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--accent-neon);
+      border: 1px solid rgba(198, 255, 61, 0.3);
+    }
+    .badge--status {
+      background: rgba(46, 204, 113, 0.15);
+      color: #2ecc71;
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      line-height: 1.3;
+      margin-bottom: 12px;
+      color: #fff;
+    }
+
+    .card-brand {
+      font-size: 0.8rem;
+      color: var(--accent-neon);
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .info-list {
+      list-style: none;
+      margin: 15px 0;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .info-list li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .info-list i {
+      color: var(--accent-neon);
+      width: 16px;
+      text-align: center;
+    }
+
+    .card-desc {
+      font-size: 0.9rem;
+      color: #c0c0cb;
+      margin-bottom: 20px;
+      flex-grow: 1;
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 15px;
+      border-top: 1px solid var(--border-color);
+      margin-top: auto;
+    }
+
+    .card-price {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .calendar-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px;
+      overflow-x: auto;
+    }
+
+    .cal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+      min-width: 600px;
+    }
+
+    .cal-day-label {
+      text-align: center;
+      font-weight: bold;
+      color: var(--accent-neon);
+      padding: 8px 0;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+    }
+
+    .cal-cell {
+      background: #101014;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      min-height: 90px;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .cal-date {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
+    .cal-item {
+      background: var(--accent-neon);
+      color: #000;
+      font-size: 0.725rem;
+      font-weight: 800;
+      padding: 3px 6px;
+      border-radius: 3px;
+      text-decoration: none;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      cursor: pointer;
+    }
+
+    /* Contact Section */
+    .contact {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 40px;
+      margin-top: 50px;
+    }
+
+    .contact__h {
+      font-family: var(--font-heading);
+      font-size: 2rem;
+      margin-bottom: 10px;
+      color: #fff;
+    }
+
+    .contact__lead {
+      color: var(--text-muted);
+      margin-bottom: 25px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-main);
+      text-transform: uppercase;
+    }
+
+    input, textarea, select {
+      background: #0e0e10;
+      border: 1px solid var(--border-color);
+      color: #fff;
+      padding: 12px;
+      border-radius: 6px;
+      font-family: inherit;
+      outline: none;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--accent-neon);
+    }
+
+    .foot {
+      padding: 40px 0;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border-color);
+      margin-top: 60px;
+    }
+
+    .foot p {
+      margin-bottom: 8px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 0;
+      color: var(--text-muted);
+      font-size: 1.1rem;
+    }
+
+    @media (max-width: 768px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      .controls {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .viewtoggle {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#schedule">Skip to the schedule</a>
+
+  <!-- Header / Hero Section -->
+  <header class="hero">
+    <div class="hazard" aria-hidden="true"></div>
+    <div class="wrap">
+      <h1 class="wordmark">
+        <span class="wm-name">Jawsatak</span><span class="wm-pipe" aria-hidden="true">|</span><span class="wm-sub">Events &amp; Classes</span>
+      </h1>
+      <p class="tagline" id="tagline">Art. Music. Education. Live Experiences.</p>
+      <p class="intro" id="intro">Explore upcoming live art events, CanvasWars competitions, art classes and workshops, music performances, and community happenings in Rogue Valley &amp; beyond.</p>
+
+      <div class="share" role="group" aria-label="Share this page">
+        <input id="pageUrl" class="share__url" type="text" readonly value="" spellcheck="false">
+        <button type="button" id="copyLink" class="btn btn--outline btn--sm">
+          <i class="fa-solid fa-copy"></i> Copy link
+        </button>
+        <a id="emailShare" class="btn btn--outline btn--sm" href="mailto:">
+          <i class="fa-solid fa-envelope"></i> Email it
+        </a>
+        <span id="shareMsg" class="share__msg" role="status" aria-live="polite"></span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Body Content -->
+  <main id="main">
+    <div class="wrap">
+
+      <!-- Schedule Section -->
+      <section id="schedule" class="schedule" aria-labelledby="scheduleHeading">
+        <h2 id="scheduleHeading" class="section-h">Schedule</h2>
+
+        <div class="controls" id="controls">
+          <div class="chips" id="chips" role="group" aria-label="Filter by category">
+            <!-- Populated by JS -->
+          </div>
+          <div class="viewtoggle" role="group" aria-label="Choose a view">
+            <button type="button" class="vbtn" id="btnListView" data-view="list" aria-pressed="true">List</button>
+            <button type="button" class="vbtn" id="btnCalView" data-view="calendar" aria-pressed="false">Calendar</button>
+          </div>
+        </div>
+
+        <p id="resultsStatus" class="sr-only" role="status" aria-live="polite"></p>
+
+        <!-- List View Container -->
+        <div id="listView">
+          <div id="upcomingList" class="event-grid"></div>
+        </div>
+
+        <!-- Calendar View Container -->
+        <div id="calView" hidden>
+          <div class="calendar-container">
+            <div class="cal-header">
+              <h3 id="calMonthTitle" style="color: #fff; font-family: var(--font-heading); font-size: 1.5rem;">October 2026</h3>
+            </div>
+            <div class="cal-grid" id="calGrid">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Contact Section -->
+      <section id="contact" class="contact" aria-labelledby="contactHeading">
+        <h2 id="contactHeading" class="contact__h">Want to Work Together or Attend an Event?</h2>
+        <p class="contact__lead">Ask about upcoming classes, live painting and commissions, music bookings, future events, or collaborations.</p>
+        
+        <form id="contactForm" onsubmit="handleFormSubmit(event)">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="name">Your Name</label>
+              <input type="text" id="name" required placeholder="Artist or Guest Name">
+            </div>
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" required placeholder="name@example.com">
+            </div>
+            <div class="form-group full">
+              <label for="interest">Inquiry Type</label>
+              <select id="interest">
+                <option value="classes">Register for a Class / Workshop</option>
+                <option value="canvaswars">CanvasWars Competition Info</option>
+                <option value="booking">Live Painting / Booking</option>
+                <option value="other">General Question</option>
+              </select>
+            </div>
+            <div class="form-group full">
+              <label for="message">Message</label>
+              <textarea id="message" rows="4" required placeholder="Tell us what you're looking for..."></textarea>
+            </div>
+          </div>
+          <button type="submit" class="btn btn--primary" style="margin-top: 10px;">Send Message</button>
+          <span id="contactStatus" style="margin-left: 15px; color: var(--accent-neon); font-weight: bold;"></span>
+        </form>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="foot">
+    <div class="wrap">
+      <p id="tzNote">Times shown are local for the venue location.</p>
+      <p>Art. Music. Education. Live Experiences.</p>
+      <p id="copyright">&copy; <span id="year"></span> Jawsatak. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Full Data Set integrated directly
+    const rawEvents = [
+      {
+        "id": "paiantbrush-fundamentals",
+        "title": "Paint Brush Fundamentals: be comfortable with any paintbrush",
+        "category": "classes",
+        "brand": "QuarkUniversity",
+        "date": "2026-10-21",
+        "startTime": "1:30 PM",
+        "endTime": "4:30 PM",
+        "venue": "Scrappy Crafts",
+        "address": "Phoenix, Oregon",
+        "city": "Phoenix, OR",
+        "description": "A three-hour hands-on class on getting comfortable using paint brushes for your artworks!",
+        "price": "$5",
+        "status": "spots available",
+        "buttonUrl": "#contact",
+        "featured": false,
+        "showOnWebsite": true,
+        "sample": true
+      },
+      {
+        "id": "lettering-fundamentals-Hc1",
+        "title": "Letter Fundamentals: basic hand lettering fundamentals & understanding script",
+        "category": "classes",
+        "brand": "QuarkUniversity",
+        "date": "2026-10-22",
+        "startTime": "1:30 PM",
+        "endTime": "4:30 PM",
+        "venue": "TimelessTreasuresHub",
+        "address": "4041 CraterLake Ave",
+        "city": "Medford, OR",
+        "description": "A three-hour hands-on class on getting comfortable with hand lettering!",
+        "price": "$5",
+        "status": "spots available",
+        "buttonUrl": "#contact",
+        "featured": false,
+        "showOnWebsite": true,
+        "sample": true
+      },
+      {
+        "id": "lettering-fundamentals-Pc1",
+        "title": "Letter Fundamentals: Painting basic lettering strokes & understanding script",
+        "category": "classes",
+        "brand": "QuarkUniversity",
+        "date": "2026-10-23",
+        "startTime": "1:30 PM",
+        "endTime": "4:30 PM",
+        "venue": "TimelessTreasuresHub",
+        "address": "4041 CraterLake Ave",
+        "city": "Medford, OR",
+        "description": "A three-hour hands-on class on getting comfortable with painting letters!",
+        "price": "$5",
+        "status": "spots available",
+        "buttonUrl": "#contact",
+        "featured": false,
+        "showOnWebsite": true,
+        "sample": true
+      },
+      {
+        "id": "mural install week",
+        "title": "Mural Install Week",
+        "category": "live-art",
+        "brand": "JawsAtak",
+        "date": "2026-10-26",
+        "endDate": "2026-10-30",
+        "startTime": "All Day",
+        "venue": "Bartlette-Middleford",
+        "city": "Medford, OR",
+        "description": "Multi-day mural install. Stop by while the work is in progress to watch live street art coming to life.",
+        "price": "Free",
+        "status": "upcoming",
+        "buttonText": "Follow Progress",
+        "buttonUrl": "#contact",
+        "showOnWebsite": true,
+        "sample": true
+      },
+      {
+        "id": "TTH WindowWars Christmas Edition",
+        "title": "Live Painting at Timeless Treasures Hub",
+        "category": "live-art",
+        "brand": "CanvasWars, TTH",
+        "date": "2026-11-06",
+        "startTime": "11:00 AM",
+        "endTime": "4:00 PM",
+        "venue": "Timeless Treasures Hub",
+        "address": "4041 CraterLake Ave",
+        "city": "Medford, OR",
+        "description": "Watch a piece come together live during the local art walk and competition preview.",
+        "price": "$5",
+        "status": "upcoming",
+        "buttonText": "Attend Event",
+        "buttonUrl": "#contact",
+        "showOnWebsite": true,
+        "sample": true
+      },
+      {
+        "id": "lettering-fundamentals-Hc2",
+        "title": "Letter Fundamentals Follow-up: Hand lettering & script workshop",
+        "category": "classes",
+        "brand": "QuarkUniversity",
+        "date": "2026-11-12",
+        "startTime": "1:30 PM",
+        "endTime": "4:30 PM",
+        "venue": "TimelessTreasuresHub",
+        "address": "4041 CraterLake Ave",
+        "city": "Medford, OR",
+        "description": "Level up your lettering technique in this continuation workshop focusing on layout and flow.",
+        "price": "$5",
+        "status": "spots available",
+        "buttonUrl": "#contact",
+        "showOnWebsite": true,
+        "sample": true
+      },
+      {
+        "id": "lettering-fundamentals-Pc2",
+        "title": "Letter Fundamentals Follow-up: Brush painting strokes & script",
+        "category": "classes",
+        "brand": "QuarkUniversity",
+        "date": "2026-11-13",
+        "startTime": "1:30 PM",
+        "endTime": "4:30 PM",
+        "venue": "TimelessTreasuresHub",
+        "address": "4041 CraterLake Ave",
+        "city": "Medford, OR",
+        "description": "Refine brush strokes and master paint consistency for long script lettering projects.",
+        "price": "$5",
+        "status": "spots available",
+        "buttonUrl": "#contact",
+        "showOnWebsite": true,
+        "sample": true
+      },
+      {
+        "id": "mural at tth",
+        "title": "New Mural & Exhibition Session",
+        "category": "live-art",
+        "brand": "JawsAtak",
+        "date": "2026-11-20",
+        "startTime": "6:00 PM",
+        "endTime": "9:00 PM",
+        "venue": "TTH Gallery",
+        "address": "4041 CraterLake Ave",
+        "city": "Medford, OR",
+        "description": "New mural installation unveiling and live gallery night.",
+        "price": "Free",
+        "status": "upcoming",
+        "buttonUrl": "#contact",
+        "showOnWebsite": true,
+        "sample": true
+      },
+      {
+        "id": "art-lecture",
+        "title": "JawsAtak Art Lecture: Graffiti to Full Time",
+        "category": "speaking",
+        "brand": "JawsAtak",
+        "date": "2026-12-04",
+        "startTime": "9:00 PM",
+        "endTime": "11:30 PM",
+        "venue": "Lecture Hall",
+        "address": "Southern Oregon University",
+        "city": "Medford, OR",
+        "description": "An open conversation about street art culture, turning creative passion into a sustainable career.",
+        "price": "Donation",
+        "status": "upcoming",
+        "buttonText": "Reserve Spot",
+        "buttonUrl": "#contact",
+        "showOnWebsite": true,
+        "sample": true
+      },
+      {
+        "id": "CW January",
+        "title": "CanvasWars: The Golden Year",
+        "category": "canvaswars",
+        "brand": "CanvasWars",
+        "date": "2027-01-15",
+        "startTime": "6:00 PM",
+        "endTime": "9:00 PM",
+        "venue": "Timeless Treasures Hub",
+        "city": "Medford, OR",
+        "description": "Kick off the new year with live timed head-to-head art battles!",
+        "price": "$10",
+        "status": "upcoming",
+        "buttonUrl": "#contact",
+        "showOnWebsite": true,
+        "sample": true
+      },
+      {
+        "id": "sample-hidden-event",
+        "title": "Sample Hidden Event (Not shown)",
+        "category": "community",
+        "date": "2026-12-12",
+        "description": "Hidden item test",
+        "showOnWebsite": false,
+        "sample": true
+      }
+    ];
+
+    // Filter down to valid display events
+    const events = rawEvents.filter(e => e.showOnWebsite !== false);
+
+    let currentCategory = 'all';
+    let currentView = 'list';
+
+    window.addEventListener('DOMContentLoaded', () => {
+      // Set current page URL into share input box
+      const urlInput = document.getElementById('pageUrl');
+      urlInput.value = window.location.href;
+
+      // Email link configuration
+      document.getElementById('emailShare').href = `mailto:?subject=Check out Jawsatak Events&body=Hey! Check out these upcoming events: ${encodeURIComponent(window.location.href)}`;
+      
+      // Set Copyright Year
+      document.getElementById('year').textContent = new Date().getFullYear();
+
+      // Render Categories
+      renderCategories();
+
+      // Initial Render
+      renderEvents();
+
+      // Bind View Switchers
+      document.getElementById('btnListView').addEventListener('click', () => switchView('list'));
+      document.getElementById('btnCalView').addEventListener('click', () => switchView('calendar'));
+
+      // Copy Link Functionality
+      document.getElementById('copyLink').addEventListener('click', () => {
+        urlInput.select();
+        document.execCommand('copy');
+        const msg = document.getElementById('shareMsg');
+        msg.textContent = 'Link copied!';
+        setTimeout(() => { msg.textContent = ''; }, 3000);
+      });
+    });
+
+    // Generate dynamic category chips
+    function renderCategories() {
+      const chipContainer = document.getElementById('chips');
+      const categories = ['all'];
+
+      events.forEach(e => {
+        if (e.category) {
+          // split multi categories if comma separated
+          const cats = e.category.split(',').map(c => c.trim().toLowerCase());
+          cats.forEach(c => {
+            if (!categories.includes(c)) categories.push(c);
+          });
+        }
+      });
+
+      chipContainer.innerHTML = categories.map(cat => {
+        const label = cat === 'all' ? 'All Events' : cat.charAt(0).toUpperCase() + cat.slice(1);
+        return `<button class="chip ${cat === 'all' ? 'active' : ''}" onclick="filterCategory('${cat}', this)">${label}</button>`;
+      }).join('');
+    }
+
+    function filterCategory(cat, btn) {
+      currentCategory = cat;
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      renderEvents();
+    }
+
+    function switchView(view) {
+      currentView = view;
+      const btnList = document.getElementById('btnListView');
+      const btnCal = document.getElementById('btnCalView');
+      const listView = document.getElementById('listView');
+      const calView = document.getElementById('calView');
+
+      if (view === 'list') {
+        btnList.setAttribute('aria-pressed', 'true');
+        btnCal.setAttribute('aria-pressed', 'false');
+        listView.hidden = false;
+        calView.hidden = true;
+      } else {
+        btnList.setAttribute('aria-pressed', 'false');
+        btnCal.setAttribute('aria-pressed', 'true');
+        listView.hidden = true;
+        calView.hidden = false;
+        renderCalendar();
+      }
+    }
+
+    function renderEvents() {
+      const container = document.getElementById('upcomingList');
+      
+      const filtered = events.filter(e => {
+        if (currentCategory === 'all') return true;
+        return e.category && e.category.toLowerCase().includes(currentCategory);
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div class="empty-state"><p>No upcoming events found in this category.</p></div>`;
+        return;
+      }
+
+      container.innerHTML = filtered.map(item => {
+        const formattedDate = formatDate(item.date, item.endDate);
+        const timeStr = item.startTime ? `${item.startTime} ${item.endTime ? '- ' + item.endTime : ''}` : 'Time TBA';
+        const brandStr = item.brand ? `<div class="card-brand">${escapeHtml(item.brand)}</div>` : '';
+        const priceStr = item.price || 'Free';
+        const btnText = item.buttonText || 'Register / Contact';
+        const btnUrl = item.buttonUrl || '#contact';
+
+        return `
+          <article class="event-card" data-category="${escapeHtml(item.category || '')}">
+            <div>
+              <div class="card-meta">
+                <span class="badge badge--cat">${escapeHtml(item.category || 'Event')}</span>
+                <span class="badge badge--status">${escapeHtml(item.status || 'Upcoming')}</span>
+              </div>
+              ${brandStr}
+              <h3 class="card-title">${escapeHtml(item.title)}</h3>
+              
+              <ul class="info-list">
+                <li><i class="fa-regular fa-calendar"></i> <span>${formattedDate}</span></li>
+                <li><i class="fa-regular fa-clock"></i> <span>${timeStr}</span></li>
+                <li><i class="fa-solid fa-location-dot"></i> <span>${escapeHtml(item.venue)} (${escapeHtml(item.city)})</span></li>
+              </ul>
+
+              <p class="card-desc">${escapeHtml(item.description)}</p>
+            </div>
+
+            <div class="card-footer">
+              <span class="card-price">${escapeHtml(priceStr)}</span>
+              <a href="${btnUrl}" class="btn btn--primary btn--sm">${escapeHtml(btnText)}</a>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    function renderCalendar() {
+      const calGrid = document.getElementById('calGrid');
+      
+      const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      let html = days.map(d => `<div class="cal-day-label">${d}</div>`).join('');
+
+      // October 2026 mock grid setup (starts on Thursday = index 4)
+      const offset = 4;
+      const totalDays = 31;
+
+      // Blank padded days
+      for (let i = 0; i < offset; i++) {
+        html += `<div class="cal-cell" style="opacity: 0.3;"></div>`;
+      }
+
+      // Populate calendar days
+      for (let d = 1; d <= totalDays; d++) {
+        const dayStr = d < 10 ? `0${d}` : `${d}`;
+        const currentDateStr = `2026-10-${dayStr}`;
+
+        const dayEvents = events.filter(e => e.date === currentDateStr);
+
+        let itemsHtml = dayEvents.map(ev => 
+          `<a href="#contact" class="cal-item" title="${escapeHtml(ev.title)}">${escapeHtml(ev.title)}</a>`
+        ).join('');
+
+        html += `
+          <div class="cal-cell">
+            <span class="cal-date">${d}</span>
+            ${itemsHtml}
+          </div>
+        `;
+      }
+
+      calGrid.innerHTML = html;
+    }
+
+    // Helper functions
+    function formatDate(dateStr, endDateStr) {
+      if (!dateStr) return 'TBA';
+      const d = new Date(dateStr + 'T00:00:00');
+      if (isNaN(d.getTime())) return dateStr;
+
+      const options = { month: 'short', day: 'numeric', year: 'numeric' };
+      let formatted = d.toLocaleDateString('en-US', options);
+
+      if (endDateStr) {
+        const endD = new Date(endDateStr + 'T00:00:00');
+        if (!isNaN(endD.getTime())) {
+          formatted += ` - ${endD.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
+        }
+      }
+      return formatted;
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      const status = document.getElementById('contactStatus');
+      status.textContent = 'Thank you! Your message has been submitted.';
+      document.getElementById('contactForm').reset();
+      setTimeout(() => { status.textContent = ''; }, 4000);
+    }
+  </script>
+</body>
+</html>
