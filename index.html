@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Jawsatak | Events &amp; Classes</title>
+  <meta name="description" content="Upcoming live art events, CanvasWars competitions, art classes and workshops, and JawsAtak47 music shows. Art. Music. Education. Live Experiences.">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#0e0e10">
+
+  <!-- Social sharing (text messages, Facebook, LinkedIn, etc.) -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Jawsatak | Events &amp; Classes">
+  <meta property="og:description" content="Upcoming live art, CanvasWars competitions, classes, and music. Art. Music. Education. Live Experiences.">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Jawsatak | Events &amp; Classes">
+  <meta name="twitter:description" content="Upcoming live art, CanvasWars competitions, classes, and music.">
+  <!-- TO GET A BIG PREVIEW IMAGE WHEN SHARED: upload a 1200x630 image to assets/ and uncomment the next
+       line, replacing the address with your real one (it must be the full https:// address).
+       Also change twitter:card above to "summary_large_image".
+  <meta property="og:image" content="https://YOUR-DOMAIN/assets/share-image.jpg">
+  -->
+
+  <!-- Favicon placeholder (a simple "J"). To use your own: save a PNG as assets/favicon.png
+       and replace this line with:  <link rel="icon" href="assets/favicon.png">  -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230e0e10'/%3E%3Ctext x='32' y='49' font-size='46' font-weight='900' text-anchor='middle' fill='%23c6ff3d' font-family='Impact,Arial Black,sans-serif'%3EJ%3C/text%3E%3C/svg%3E">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#schedule">Skip to the schedule</a>
+
+  <div id="previewBanner" class="banner banner--preview" role="status" hidden>
+    Previewing your unpublished draft from the editor. Visitors do not see this version.
+  </div>
+
+  <header class="hero">
+    <div class="hazard" aria-hidden="true"></div>
+    <div class="wrap">
+      <h1 class="wordmark">
+        <span class="wm-name">Jawsatak</span><span class="wm-pipe" aria-hidden="true">|</span><span class="wm-sub">Events &amp; Classes</span>
+      </h1>
+      <p class="tagline" id="tagline">Art. Music. Education. Live Experiences.</p>
+      <p class="intro" id="intro">Explore upcoming live art events, CanvasWars competitions, art classes and workshops, music performances, and community happenings.</p>
+
+      <ul class="social" id="socialLinks" aria-label="Links" hidden></ul>
+
+      <div class="share" role="group" aria-label="Share this page">
+        <label for="pageUrl" class="sr-only">Link to this page</label>
+        <input id="pageUrl" class="share__url" type="text" readonly value="" spellcheck="false">
+        <button type="button" id="copyLink" class="btn btn--outline btn--sm">Copy link</button>
+        <button type="button" id="shareBtn" class="btn btn--outline btn--sm" hidden>Share</button>
+        <a id="emailShare" class="btn btn--outline btn--sm" href="mailto:">Email it</a>
+        <span id="shareMsg" class="share__msg" role="status" aria-live="polite"></span>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="wrap">
+
+      <div id="sampleBanner" class="banner banner--sample" role="note" hidden>
+        <strong>Sample data.</strong> The events below are examples that show how the page works.
+        Replace them in <code>events.js</code> and this notice disappears.
+      </div>
+
+      <section id="featured" class="featured" aria-labelledby="featuredLabel" hidden></section>
+
+      <section id="schedule" class="schedule" aria-labelledby="scheduleHeading">
+        <h2 id="scheduleHeading" class="section-h">Schedule</h2>
+
+        <div class="controls" id="controls">
+          <div class="chips" id="chips" role="group" aria-label="Filter by category"></div>
+          <div class="viewtoggle" role="group" aria-label="Choose a view">
+            <button type="button" class="vbtn" data-view="list" aria-pressed="true">List</button>
+            <button type="button" class="vbtn" data-view="calendar" aria-pressed="false">Calendar</button>
+          </div>
+        </div>
+
+        <p id="resultsStatus" class="sr-only" role="status" aria-live="polite"></p>
+
+        <noscript>
+          <p class="empty">This schedule needs JavaScript to display. Please enable it, or contact us for the current dates.</p>
+        </noscript>
+
+        <div id="listView">
+          <div id="upcomingList"></div>
+          <section id="pastSection" class="past" aria-label="Past events" hidden>
+            <button type="button" id="togglePast" class="btn btn--outline" aria-expanded="false" aria-controls="pastList"></button>
+            <div id="pastList" hidden></div>
+          </section>
+        </div>
+
+        <div id="calView" hidden></div>
+      </section>
+
+      <section id="contact" class="contact" aria-labelledby="contactHeading">
+        <h2 id="contactHeading" class="contact__h">Want to Work Together or Attend an Event?</h2>
+        <p class="contact__lead">Ask about upcoming classes, live painting and commissions, music bookings, future events, or collaborations.</p>
+        <div id="contactBody"></div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap">
+      <p id="tzNote"></p>
+      <p>Times shown are for the event's location. "Add to Calendar" downloads a file that opens in Apple Calendar, Google Calendar, Outlook, and others.</p>
+      <p id="copyright"></p>
+    </div>
+  </footer>
+
+  <script src="config.js"></script>
+  <script src="events.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
